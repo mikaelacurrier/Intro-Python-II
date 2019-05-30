@@ -1,5 +1,6 @@
 from room import Room
 from player import Player
+from items import Item
 
 # Declare all the rooms
 
@@ -34,17 +35,25 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
+
+
+# Create Items
+
+item = {
+    'dust':  Item("Dust",
+                     "This seeems to be useless...")
+}
+
 # Items in rooms
 
-room['foyer'].items = 'dust'
-room['overlook'].items = 'sword'
+room['foyer'].items = item['dust']
+# room['overlook'].items = 'sword'
 
 #
 # Main
 
 # Make a new player object that is currently in the 'outside' room.
 
-player = Player(input("Welcome! Please enter your name: "), room['outside'], [])
 
 
 # Write a loop that:
@@ -59,18 +68,20 @@ player = Player(input("Welcome! Please enter your name: "), room['outside'], [])
 # If the user enters "q", quit the game.
 
 
+player = Player(input("Welcome! Please enter your name: "), room['outside'], [])
+player.display_room() 
+action = input("Move North(n), South(s), East(e), or West(w) \nItem Action(i) \nQuit Game(q)\n\n")
+player.action_input(action)
 
 while True:
-    print(f'Current Room: {player.current_room.name}\n \n{player.current_room.description}\n\n')
-    print(f"Inventory: {player.inventory}")
-    print("***********         *******************         ***********")
-    move = input("Move North(n), South(s), East(e), or West(w) \nItem Action(i) \nQuit Game(q)")
-    player.move_player(move)
-    if move == 'q':
+    if action == 'q':
         break
     elif player.current_room is not None:
+        player.display_room() 
         # Check to see if item is in room and ask player if they want to pick it up
         player.if_player_sees_item()
+        action = input("Move North(n), South(s), East(e), or West(w) \nItem Action(i) \nQuit Game(q)\n\n")
+        player.action_input(action)
         continue
     else:
         print("This room does not exist. Please try again.")
